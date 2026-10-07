@@ -1,8 +1,11 @@
-const APPS_SCRIPT_URL = "PEGA_AQUI_LA_URL_DE_TU_NUEVA_IMPLEMENTACION";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxewx68JEkqIo9jTQl-HuLOtIN0txb2O6T8B0Ry7mq2lpdwcl9zjsEpny5L1o_mJZtpGQ/exec";
 
 let registroEnCurso = false;
 
 async function registrarParticipante(datos) {
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(APPS_SCRIPT_URL)) {
+    throw new Error("Falta configurar la URL de implementación de Apps Script.");
+  }
   if (registroEnCurso) throw new Error("Ya hay un envío en curso.");
   registroEnCurso = true;
   try {

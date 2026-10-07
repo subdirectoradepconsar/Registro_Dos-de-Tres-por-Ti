@@ -1,8 +1,9 @@
-// Hoja de destino: https://docs.google.com/spreadsheets/d/1yYvjqEPxaqTM4x7P6PgZS9JXGklmFFVRZooEKz7uMhQ/edit?gid=0
-const SPREADSHEET_ID = "1yYvjqEPxaqTM4x7P6PgZS9JXGklmFFVRZooEKz7uMhQ";
+// Hoja de destino: https://docs.google.com/spreadsheets/d/1MrfkECNHsUrr8NzMMEnWFEU3UkARzAyJG0HKc--cr_Q/edit?gid=0
+const SPREADSHEET_ID = "1MrfkECNHsUrr8NzMMEnWFEU3UkARzAyJG0HKc--cr_Q";
 const SHEET_GID = 0;
 
 function doPost(e) {
+  const lock = LockService.getScriptLock();
   try {
     if (!e || !e.postData || !e.postData.contents) {
       throw new Error("El cuerpo JSON es obligatorio.");
@@ -37,12 +38,13 @@ function doPost(e) {
       throw new Error("Año de nacimiento fuera de rango.");
     }
 
-    const encabezados = ["Fecha y Hora", "Nombre", "Correo", "Año de nacimiento", "Género"];
+    lock.waitLock(30000);
+    const encabezados = ["Fecha", "Nombre", "Correo", "Año", "Género"];
     if (hoja.getLastRow() === 0) {
       hoja.getRange(1, 1, 1, encabezados.length).setValues([encabezados]);
     } else {
       const actuales = hoja.getRange(1, 1, 1, encabezados.length).getValues()[0];
-      if (actuales.some(function (valor, i) { return valor !== encabezados[i]; })) {
+      if (actuales.some(function (valor, i) { return String(valor).trim() !== encabezados[i]; })) {
         throw new Error("Los encabezados de A1:E1 no coinciden con el formato esperado.");
       }
     }
@@ -54,9 +56,12 @@ function doPost(e) {
       anio,
       textoSeguro_(datos.genero)
     ]);
+    SpreadsheetApp.flush();
     return respuestaJSON_({ status: "success" });
   } catch (error) {
     return respuestaJSON_({ status: "error", message: error.message || String(error) });
+  } finally {
+    if (lock.hasLock()) lock.releaseLock();
   }
 }
 
