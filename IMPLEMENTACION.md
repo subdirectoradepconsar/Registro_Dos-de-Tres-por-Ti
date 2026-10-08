@@ -4,6 +4,8 @@ El formulario está conectado al spreadsheet [Registro StandTresPorMi](https://d
 
 ## Integración
 
+El correo electrónico y el año de nacimiento son opcionales. Si se omiten, sus celdas quedan vacías; nombre y género siguen siendo obligatorios. Para habilitar este cambio en la hoja, también hay que actualizar la implementación de Apps Script con el nuevo `Código.gs` siguiendo los pasos de abajo.
+
 - Código del servidor: `Código.gs`.
 - Proyecto de Apps Script: https://script.google.com/u/0/home/projects/1CkNBlU_DQkRA6HJ9_EcHhUO8mUFBf0koGmHd01je28WtkxLVaZGmCiDD/edit
 - URL configurada en `app.js`: https://script.google.com/macros/s/AKfycbxewx68JEkqIo9jTQl-HuLOtIN0txb2O6T8B0Ry7mq2lpdwcl9zjsEpny5L1o_mJZtpGQ/exec

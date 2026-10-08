@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clearAllErrors();
     const checks = {
       nombre: Boolean(fields.nombre.value.trim()),
-      correo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.correo.value.trim()),
-      anioNacimiento: Number(fields.anioNacimiento.value) >= 1920 && Number(fields.anioNacimiento.value) <= 2026,
+      correo: !fields.correo.value.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.correo.value.trim()),
+      anioNacimiento: !fields.anioNacimiento.value || (Number(fields.anioNacimiento.value) >= 1920 && Number(fields.anioNacimiento.value) <= 2026),
       genero: Boolean(fields.genero.value)
     };
     Object.entries(checks).forEach(([name, valid]) => { if (!valid) showFieldError(name); });

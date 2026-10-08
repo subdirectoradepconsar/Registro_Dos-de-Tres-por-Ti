@@ -12,16 +12,18 @@ function doPost(e) {
     if (!datos || typeof datos !== "object" || Array.isArray(datos)) {
       throw new Error("Se esperaba un objeto JSON.");
     }
-    ["nombre", "correo", "genero"].forEach(function (campo) {
+    ["nombre", "genero"].forEach(function (campo) {
       if (typeof datos[campo] !== "string" || !datos[campo].trim()) {
         throw new Error("Campo obligatorio: " + campo);
       }
       datos[campo] = datos[campo].trim();
     });
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo)) {
+    datos.correo = datos.correo == null ? "" : String(datos.correo).trim();
+    datos.anioNacimiento = datos.anioNacimiento == null ? "" : String(datos.anioNacimiento).trim();
+    if (datos.correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.correo)) {
       throw new Error("Correo electrónico inválido.");
     }
-    if (!/^\d{4}$/.test(String(datos.anioNacimiento))) {
+    if (datos.anioNacimiento && !/^\d{4}$/.test(datos.anioNacimiento)) {
       throw new Error("Año de nacimiento inválido.");
     }
 
@@ -33,8 +35,8 @@ function doPost(e) {
 
     const ahora = new Date();
     const zona = libro.getSpreadsheetTimeZone();
-    const anio = Number(datos.anioNacimiento);
-    if (anio < 1920 || anio > Number(Utilities.formatDate(ahora, zona, "yyyy"))) {
+    const anio = datos.anioNacimiento === "" ? "" : Number(datos.anioNacimiento);
+    if (anio !== "" && (anio < 1920 || anio > Number(Utilities.formatDate(ahora, zona, "yyyy")))) {
       throw new Error("Año de nacimiento fuera de rango.");
     }
 
